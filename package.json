@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "worker": "tsx worker/index.ts",
+    "worker:dev": "tsx watch worker/index.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",

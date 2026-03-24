@@ -24,12 +24,27 @@ describe("queue", () => {
   it("enqueueStory calls queue.add with job name 'generate' and correct payload", async () => {
     const { enqueueStory } = await import("@/lib/queue");
     await enqueueStory("story-abc123");
-    expect(mockAdd).toHaveBeenCalledWith("generate", { storyId: "story-abc123" });
+    expect(mockAdd).toHaveBeenCalledWith("generate", { storyId: "story-abc123" }, expect.any(Object));
+  });
+
+  it("enqueueStory passes retry options", async () => {
+    const { enqueueStory } = await import("@/lib/queue");
+    await enqueueStory("story-abc123");
+    expect(mockAdd).toHaveBeenCalledWith(
+      "generate",
+      { storyId: "story-abc123" },
+      expect.objectContaining({
+        attempts: 3,
+        backoff: { type: "exponential", delay: 5000 },
+        removeOnComplete: { age: 3600 },
+        removeOnFail: { age: 86400 },
+      })
+    );
   });
 
   it("enqueueStory accepts any story id", async () => {
     const { enqueueStory } = await import("@/lib/queue");
     await enqueueStory("another-id-456");
-    expect(mockAdd).toHaveBeenCalledWith("generate", { storyId: "another-id-456" });
+    expect(mockAdd).toHaveBeenCalledWith("generate", { storyId: "another-id-456" }, expect.any(Object));
   });
 });
