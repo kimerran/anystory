@@ -26,7 +26,7 @@ export function VoiceSelector({ value, onChange, className }: VoiceSelectorProps
           <option key={v.id} value={v.id} label={v.name}>{v.id}</option>
         ))}
       </select>
-      <div className="flex cursor-pointer items-center justify-between rounded-xl border border-white/11 bg-white/5 px-3 py-3 transition hover:border-white/25">
+      <div className="pointer-events-none flex items-center justify-between rounded-xl border border-white/11 bg-white/5 px-3 py-3 transition hover:border-white/25">
         <div className="flex items-center gap-2">
           <span aria-hidden="true">🎙</span>
           <div>

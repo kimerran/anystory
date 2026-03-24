@@ -26,7 +26,7 @@ export function FontSelector({ value, onChange, className }: FontSelectorProps) 
           <option key={f.name} value={f.name} label={f.name}>{f.variable}</option>
         ))}
       </select>
-      <div className="flex cursor-pointer items-center justify-between rounded-xl border border-white/11 bg-white/5 px-3 py-3 transition hover:border-white/25">
+      <div className="pointer-events-none flex items-center justify-between rounded-xl border border-white/11 bg-white/5 px-3 py-3 transition hover:border-white/25">
         <div className="flex items-center gap-2">
           <span className={cn("text-sm text-white/70", selected.className)} aria-hidden="true">Aa</span>
           <div>
