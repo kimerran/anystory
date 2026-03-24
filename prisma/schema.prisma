@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
@@ -10,5 +5,138 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+// ─── Auth ────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String?
+  name          String?
+  image         String?
+  role          Role      @default(ADMIN)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  stories       Story[]
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+// ─── Stories ─────────────────────────────────────────────────────────────────
+
+model Story {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  sourceUrl     String
+  sourceDomain  String
+  title         String
+  content       String
+  wordCount     Int
+  imageUrl      String?
+  audioUrl      String?
+  voiceId       String
+  voiceName     String
+  fontFamily    String
+  status        StoryStatus   @default(PENDING)
+  errorMessage  String?
+  ipHash        String?
+
+  // User association (added for Google OAuth)
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([sourceUrl])
+  @@index([createdAt])
+  @@index([userId])
+  @@map("stories")
+}
+
+enum StoryStatus {
+  PENDING
+  SCRAPING
+  WRITING
+  ILLUSTRATING
+  NARRATING
+  DONE
+  ERROR
+}
+
+// ─── Rate Limiting ────────────────────────────────────────────────────────────
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  count     Int      @default(1)
+  windowEnd DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([windowEnd])
+  @@map("rate_limits")
+}
+
+// ─── Job Audit Log ────────────────────────────────────────────────────────────
+
+model JobLog {
+  id        String   @id @default(cuid())
+  storyId   String
+  jobName   String
+  status    String
+  duration  Int?
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([storyId])
+  @@map("job_logs")
 }
