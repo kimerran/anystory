@@ -20,7 +20,7 @@ export async function generateAudio(text: string, voiceId: string): Promise<Buff
       }
     );
     return Buffer.from(await res.arrayBuffer());
-  } catch {
-    throw new Error("ElevenLabs: audio generation failed");
+  } catch (err) {
+    throw new Error("ElevenLabs: audio generation failed", { cause: err });
   }
 }
