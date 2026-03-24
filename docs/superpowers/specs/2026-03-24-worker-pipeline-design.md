@@ -60,6 +60,7 @@ BullMQ job { storyId }
 
 ```ts
 import { Worker, Job } from "bullmq";
+import { StoryStatus } from "@/app/generated/prisma/client";
 import { redis } from "@/lib/redis";
 import { prisma } from "@/lib/prisma";
 import { scrapeUrl } from "@/lib/firecrawl";
@@ -75,19 +76,20 @@ const worker = new Worker(
   async (job: Job<{ storyId: string }>) => {
     const { storyId } = job.data;
 
-    const story = await prisma.story.findUniqueOrThrow({ where: { id: storyId } });
-
     try {
+      // findUniqueOrThrow inside try so errors are caught and set ERROR status
+      const story = await prisma.story.findUniqueOrThrow({ where: { id: storyId } });
+
       // Step 1: Scrape
-      await setStatus(storyId, "SCRAPING");
+      await setStatus(storyId, StoryStatus.SCRAPING);
       const { markdown } = await scrapeUrl(story.sourceUrl);
 
       // Step 2: Write story
-      await setStatus(storyId, "WRITING");
+      await setStatus(storyId, StoryStatus.WRITING);
       const { title, story: storyText } = await generateStory(markdown);
 
       // Step 3: Illustrate
-      await setStatus(storyId, "ILLUSTRATING");
+      await setStatus(storyId, StoryStatus.ILLUSTRATING);
       const imageBuffer = await generateImage(storyText);
       const imageUrl = await uploadBuffer(
         process.env.S3_BUCKET_IMAGES!,
@@ -97,7 +99,7 @@ const worker = new Worker(
       );
 
       // Step 4: Narrate
-      await setStatus(storyId, "NARRATING");
+      await setStatus(storyId, StoryStatus.NARRATING);
       const audioBuffer = await generateAudio(storyText, story.voiceId);
       const audioUrl = await uploadBuffer(
         process.env.S3_BUCKET_AUDIO!,
@@ -117,14 +119,14 @@ const worker = new Worker(
           imageUrl,
           audioUrl,
           slug,
-          status: "DONE",
+          status: StoryStatus.DONE,
         },
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
       await prisma.story.update({
         where: { id: storyId },
-        data: { status: "ERROR", errorMessage: message },
+        data: { status: StoryStatus.ERROR, errorMessage: message },
       });
       throw err; // BullMQ handles retries
     }
@@ -132,8 +134,8 @@ const worker = new Worker(
   { connection: redis, concurrency: 3 }
 );
 
-async function setStatus(storyId: string, status: string) {
-  await prisma.story.update({ where: { id: storyId }, data: { status: status as never } });
+async function setStatus(storyId: string, status: StoryStatus) {
+  await prisma.story.update({ where: { id: storyId }, data: { status } });
 }
 
 worker.on("failed", (job, err) => {
@@ -142,6 +144,8 @@ worker.on("failed", (job, err) => {
 
 export default worker;
 ```
+
+**Prerequisites (from Spec 1):** The POST /api/stories route creates the story with placeholder values (`title: ""`, `content: ""`, `wordCount: 0`) before enqueuing. The worker overwrites these fields on success. On ERROR, the placeholder values remain in DB — they are never shown to users since the story page only renders `status === "DONE"` stories.
 
 ---
 
@@ -170,7 +174,7 @@ generateStory(content: string): Promise<{ title: string; story: string }>
 - Max tokens: `500`
 - System prompt: children's story author, respond with valid JSON only
 - User prompt: create a 100-word story from content, respond ONLY with `{ "title": "...", "story": "..." }`
-- Parses JSON from response text, validates with zod: `z.object({ title: z.string(), story: z.string() })`
+- Parses JSON from response text, validates with zod (already installed): `z.object({ title: z.string(), story: z.string() })`
 - Throws `"Claude: invalid JSON response"` on parse failure
 
 ### 5.3 `lib/fal.ts`
@@ -255,6 +259,8 @@ This overwrites the temporary nanoid slug created at story creation time. The st
 | ElevenLabs fails | Throw → story set to ERROR → BullMQ retries |
 | S3 upload fails | Throw → story set to ERROR → BullMQ retries |
 | All 3 retries exhausted | Story stays `ERROR`, `errorMessage` set |
+
+**Known tech debt — orphaned S3 objects on retry:** If a job fails after uploading the image (during NARRATING), the uploaded image remains in S3. On retry, new keys are generated, leaving 1–2 orphan objects per failed attempt. Accepted for now; a future cleanup job can prune objects for `ERROR` stories.
 
 ---
 
