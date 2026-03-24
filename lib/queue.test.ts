@@ -15,7 +15,9 @@ vi.mock("@/lib/redis", () => ({
 }));
 
 beforeEach(() => {
-  mockAdd.mockClear();
+  vi.resetModules();
+  delete (globalThis as any).storyQueue;
+  mockAdd.mockReset();
 });
 
 describe("queue", () => {
