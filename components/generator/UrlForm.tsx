@@ -7,6 +7,7 @@ import { VOICES } from "@/lib/voices";
 import { STORY_FONTS } from "@/lib/fonts";
 import { VoiceSelector } from "@/components/story/VoiceSelector";
 import { FontSelector } from "@/components/story/FontSelector";
+import { SignInNudge } from "@/components/auth/SignInNudge";
 
 const schema = z.object({
   url:      z.string().url("Please enter a valid URL (include https://)"),
@@ -19,9 +20,10 @@ export type UrlFormValues = z.infer<typeof schema>;
 interface UrlFormProps {
   onSubmit: (values: UrlFormValues) => void;
   isLoading: boolean;
+  isAuthenticated?: boolean;
 }
 
-export function UrlForm({ onSubmit, isLoading }: UrlFormProps) {
+export function UrlForm({ onSubmit, isLoading, isAuthenticated = false }: UrlFormProps) {
   const {
     register,
     handleSubmit,
@@ -81,6 +83,8 @@ export function UrlForm({ onSubmit, isLoading }: UrlFormProps) {
       >
         {isLoading ? "Generating\u2026" : "\u2728 Generate My Story"}
       </button>
+
+      {!isAuthenticated && <SignInNudge />}
     </form>
   );
 }

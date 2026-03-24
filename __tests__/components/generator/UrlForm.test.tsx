@@ -29,4 +29,19 @@ describe("UrlForm", () => {
       );
     });
   });
+
+  it("shows SignInNudge when not authenticated", () => {
+    render(<UrlForm onSubmit={vi.fn()} isLoading={false} isAuthenticated={false} />);
+    expect(screen.getByText(/sign in with google/i)).toBeInTheDocument();
+  });
+
+  it("hides SignInNudge when authenticated", () => {
+    render(<UrlForm onSubmit={vi.fn()} isLoading={false} isAuthenticated={true} />);
+    expect(screen.queryByText(/sign in with google/i)).not.toBeInTheDocument();
+  });
+
+  it("disables submit button while loading", () => {
+    render(<UrlForm onSubmit={vi.fn()} isLoading={true} />);
+    expect(screen.getByRole("button", { name: /generating/i })).toBeDisabled();
+  });
 });
