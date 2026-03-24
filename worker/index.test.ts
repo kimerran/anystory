@@ -135,15 +135,15 @@ describe("worker", () => {
       (call: any[]) => call[0].data.status === "DONE"
     );
     expect(finalUpdate).toBeDefined();
-    expect(finalUpdate[0].data).toMatchObject({
+    expect(finalUpdate![0].data).toMatchObject({
       title: "The Brave Robot",
       content: "Once upon a time...",
       imageUrl: "https://s3.example.com/image.jpg",
       audioUrl: "https://s3.example.com/audio.mp3",
       status: "DONE",
     });
-    expect(finalUpdate[0].data.wordCount).toBeGreaterThan(0);
-    expect(finalUpdate[0].data.slug).toMatch(/^the-brave-robot-/);
+    expect(finalUpdate![0].data.wordCount).toBeGreaterThan(0);
+    expect(finalUpdate![0].data.slug).toMatch(/^the-brave-robot-/);
   });
 
   it("on error: sets status ERROR with errorMessage and re-throws", async () => {
@@ -158,7 +158,7 @@ describe("worker", () => {
       (call: any[]) => call[0].data.status === "ERROR"
     );
     expect(errorUpdate).toBeDefined();
-    expect(errorUpdate[0].data).toMatchObject({
+    expect(errorUpdate![0].data).toMatchObject({
       status: "ERROR",
       errorMessage: "Firecrawl: failed to scrape URL",
     });
