@@ -5,7 +5,7 @@ const mockWorkerOn = vi.fn();
 const mockWorkerConstructor = vi.fn();
 
 vi.mock("bullmq", () => ({
-  Worker: vi.fn().mockImplementation((queueName, processor, opts) => {
+  Worker: vi.fn(function(queueName: string, processor: any, opts: any) {
     mockWorkerConstructor(queueName, opts);
     return { on: mockWorkerOn };
   }),

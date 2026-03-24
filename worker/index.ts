@@ -10,8 +10,7 @@ import { uploadBuffer } from "@/lib/storage";
 import slugify from "slugify";
 import { nanoid } from "nanoid";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const worker = (Worker as any)(
+const worker = new Worker(
   "story-generation",
   async (job: Job<{ storyId: string }>) => {
     const { storyId } = job.data;
