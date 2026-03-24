@@ -16,10 +16,11 @@ interface Story {
 interface HomeClientProps {
   session: Session | null;
   recentStories: Story[];
+  storyCount: number | null;
   isAuthenticated: boolean;
 }
 
-export function HomeClient({ session, recentStories, isAuthenticated }: HomeClientProps) {
+export function HomeClient({ session, recentStories, storyCount, isAuthenticated }: HomeClientProps) {
   const router = useRouter();
   const [generatingId, setGeneratingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +88,7 @@ export function HomeClient({ session, recentStories, isAuthenticated }: HomeClie
           </span>
           {isAuthenticated && recentStories.length > 0 && (
             <span className="font-fredoka text-sm text-amber/70">
-              {recentStories.length} stories
+              {storyCount ?? recentStories.length} stories
             </span>
           )}
         </div>

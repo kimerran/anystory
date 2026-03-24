@@ -90,17 +90,6 @@ export function AudioPlayer({ audioUrl, title, narratorName }: AudioPlayerProps)
         />
       </div>
 
-      {/* Download */}
-      <div className="mt-3 flex justify-end">
-        <a
-          href={audioUrl}
-          download
-          aria-label="Download MP3"
-          className="font-fredoka text-xs text-white/35 hover:text-white/60"
-        >
-          ⬇ Download MP3
-        </a>
-      </div>
     </div>
   );
 }

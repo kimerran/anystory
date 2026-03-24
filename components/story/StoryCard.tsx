@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AudioPlayer } from "@/components/story/AudioPlayer";
+import { CopyLinkButton } from "@/components/story/CopyLinkButton";
 import { SaveStoryBanner } from "@/components/auth/SaveStoryBanner";
 import { STORY_FONTS } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -52,10 +53,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
           📎 {story.sourceDomain}
         </p>
 
-        <h1 className={cn(
-          "mb-4 bg-gradient-to-br from-[#fbbf24] to-[#f97316] bg-clip-text text-3xl leading-tight text-transparent",
-          font.className
-        )}>
+        <h1 className="mb-4 bg-gradient-to-br from-[#fbbf24] to-[#f97316] bg-clip-text text-[32px] font-bubblegum leading-tight text-transparent">
           {story.title}
         </h1>
 
@@ -76,19 +74,14 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
 
         {/* Actions */}
         <div className="flex gap-2.5">
-          <button
-            onClick={() => navigator.clipboard.writeText(window.location.href)}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-white/13 bg-white/5 py-3 font-fredoka text-sm font-medium text-white/65 transition hover:border-white/25 hover:text-white"
-          >
-            🔗 Copy Link
-          </button>
+          <CopyLinkButton />
           {story.audioUrl && (
             <a
               href={story.audioUrl}
               download
               className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-white/13 bg-white/5 py-3 font-fredoka text-sm font-medium text-white/65 transition hover:border-white/25 hover:text-white"
             >
-              ⬇ MP3
+              ⬇ Download MP3
             </a>
           )}
           <Link

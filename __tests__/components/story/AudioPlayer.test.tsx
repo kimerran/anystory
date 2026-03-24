@@ -21,13 +21,6 @@ describe("AudioPlayer", () => {
     expect(audio?.autoplay).toBeFalsy();
   });
 
-  it("renders download link", () => {
-    render(<AudioPlayer {...props} />);
-    const link = screen.getByRole("link", { name: /download/i });
-    expect(link).toHaveAttribute("href", props.audioUrl);
-    expect(link).toHaveAttribute("download");
-  });
-
   it("renders narrator name", () => {
     render(<AudioPlayer {...props} />);
     expect(screen.getByText(/rachel/i)).toBeInTheDocument();
