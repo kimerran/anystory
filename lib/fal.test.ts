@@ -4,7 +4,7 @@ const mockSubscribe = vi.fn();
 const mockKyGet = vi.fn();
 
 vi.mock("@fal-ai/client", () => ({
-  fal: { subscribe: mockSubscribe },
+  fal: { subscribe: mockSubscribe, config: vi.fn() },
 }));
 
 vi.mock("ky", () => ({

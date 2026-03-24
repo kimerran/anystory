@@ -47,6 +47,7 @@ const worker = new Worker(
       );
 
       // Finalize
+      // nanoid(6) suffix makes collisions rare; on collision the update throws and BullMQ retries (regenerating nanoid)
       const slug = slugify(title, { lower: true, strict: true }) + "-" + nanoid(6);
       await prisma.story.update({
         where: { id: storyId },
@@ -61,7 +62,8 @@ const worker = new Worker(
         },
       });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Unknown error";
+      const cause = err instanceof Error && err.cause instanceof Error ? `: ${err.cause.message}` : "";
+      const message = err instanceof Error ? `${err.message}${cause}` : "Unknown error";
       await prisma.story.update({
         where: { id: storyId },
         data: { status: StoryStatus.ERROR, errorMessage: message },

@@ -1,6 +1,8 @@
 import { fal } from "@fal-ai/client";
 import ky from "ky";
 
+fal.config({ credentials: process.env.FAL_KEY! });
+
 export async function generateImage(storyText: string): Promise<Buffer> {
   const result = await fal.subscribe("fal-ai/flux-pro/v1.1-ultra", {
     input: {
