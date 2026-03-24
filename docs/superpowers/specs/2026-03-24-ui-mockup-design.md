@@ -41,6 +41,8 @@ AnyStory is a children's story generator that turns any public website URL into 
 - Generator card (glassmorphism):
   - URL input with link icon prefix
   - 2-column selector row: Narrator Voice + Story Font (each shows name + character description)
+  - Voice options: Rachel, Domi, Bella, Antoni, Elli, Josh, Arnold, Adam (from SPEC.md §4.4)
+  - Font options: Bubblegum Sans, Patrick Hand, Fredoka, Baloo 2, Schoolbell, Short Stack, Sniglet, Chewy (from SPEC.md §8.2)
   - "✨ Generate My Story" amber→orange gradient CTA button
 - Soft sign-in nudge below the card (guest only): "Want to save your stories? Sign in with Google"
 - Recent stories section:
@@ -53,7 +55,7 @@ AnyStory is a children's story generator that turns any public website URL into 
 
 ---
 
-### 3.2 Generating Page (in-place or modal)
+### 3.2 Generating Page (in-place replacement of home content)
 
 Replaces the home view after form submission while polling `/api/stories/status/[id]`.
 
