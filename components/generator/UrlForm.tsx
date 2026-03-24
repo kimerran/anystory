@@ -42,11 +42,11 @@ export function UrlForm({ onSubmit, isLoading }: UrlFormProps) {
   return (
     <form
       onSubmit={handleSubmit((values) => onSubmit(values))}
-      className="flex flex-col gap-4 rounded-3xl border border-white/12 bg-white/7 p-6 shadow-2xl backdrop-blur-2xl"
+      className="flex flex-col gap-4 rounded-3xl border border-white/12 bg-white/7 p-6 shadow-2xl backdrop-blur-xl"
     >
       {/* URL input */}
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 focus-within:border-amber/50">
+        <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 focus-within:border-amber/50">
           <span className="text-white/40" aria-hidden="true">🔗</span>
           <input
             {...register("url")}
@@ -77,7 +77,7 @@ export function UrlForm({ onSubmit, isLoading }: UrlFormProps) {
       <button
         type="submit"
         disabled={isLoading}
-        className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#fbbf24] to-[#f97316] py-3 font-fredoka text-base font-semibold text-black shadow-[0_0_20px_rgba(251,191,36,0.3)] transition hover:shadow-[0_0_28px_rgba(251,191,36,0.5)] disabled:opacity-60"
+        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#fbbf24] to-[#f97316] py-3 font-fredoka text-base font-semibold text-black shadow-[0_0_20px_rgba(251,191,36,0.3)] transition hover:shadow-[0_0_28px_rgba(251,191,36,0.5)] disabled:opacity-60"
       >
         {isLoading ? "Generating\u2026" : "\u2728 Generate My Story"}
       </button>
