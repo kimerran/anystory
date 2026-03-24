@@ -134,6 +134,7 @@ describe("worker", () => {
     const finalUpdate = mockPrismaUpdate.mock.calls.find(
       (call: any[]) => call[0].data.status === "DONE"
     );
+    expect(finalUpdate).toBeDefined();
     expect(finalUpdate[0].data).toMatchObject({
       title: "The Brave Robot",
       content: "Once upon a time...",
@@ -156,6 +157,7 @@ describe("worker", () => {
     const errorUpdate = mockPrismaUpdate.mock.calls.find(
       (call: any[]) => call[0].data.status === "ERROR"
     );
+    expect(errorUpdate).toBeDefined();
     expect(errorUpdate[0].data).toMatchObject({
       status: "ERROR",
       errorMessage: "Firecrawl: failed to scrape URL",
