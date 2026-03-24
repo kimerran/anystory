@@ -31,7 +31,7 @@ describe("generateImage", () => {
       "fal-ai/flux-pro/v1.1-ultra",
       expect.objectContaining({
         input: expect.objectContaining({
-          image_size: "portrait_4_3",
+          aspect_ratio: "3:4",
           prompt: expect.stringContaining("A brave little robot"),
         }),
       })

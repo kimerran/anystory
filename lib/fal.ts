@@ -4,7 +4,7 @@ import ky from "ky";
 export async function generateImage(storyText: string): Promise<Buffer> {
   const result = await fal.subscribe("fal-ai/flux-pro/v1.1-ultra", {
     input: {
-      image_size: "portrait_4_3",
+      aspect_ratio: "3:4",
       prompt: `A children's book illustration: ${storyText} Warm, colorful, whimsical, Pixar-inspired style. No text in image.`,
     },
   });
