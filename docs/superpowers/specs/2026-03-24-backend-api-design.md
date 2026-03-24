@@ -111,19 +111,20 @@ checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }>
 
 **Request body:**
 ```ts
-{ url: string; voiceId: string; fontId: string }
+{ url: string; voiceId: string; voiceName: string; fontFamily: string }
 ```
 
 **Validation (zod):**
 - `url`: valid HTTP/HTTPS URL
 - `voiceId`: must be a known voice ID (validate against `VOICES` from `@/lib/voices`)
-- `fontId`: must be a known font ID (validate against `STORY_FONTS` from `@/lib/fonts`)
+- `voiceName`: non-empty string (provided by frontend, paired with voiceId)
+- `fontFamily`: must be a known font name (validate against `STORY_FONTS.map(f => f.name)` from `@/lib/fonts`)
 
 **Flow:**
 1. Parse + validate request body → `400` on failure
 2. Extract client IP from `x-forwarded-for` header (Railway sets this). Fall back to `"127.0.0.1"` if header is absent (local dev without proxy).
 3. `checkRateLimit(ip)` → `429 { error: "Rate limit exceeded", remaining: 0 }` if denied
-4. `db.story.create({ url, voiceId, fontId, status: "PENDING", slug: nanoid(10), userId: session?.user?.id ?? null })`
+4. `prisma.story.create({ sourceUrl: url, sourceDomain, voiceId, voiceName, fontFamily, title: "", content: "", wordCount: 0, status: "PENDING", slug: nanoid(10), ipHash, userId: session?.user?.id ?? null })`
 5. `enqueueStory(story.id)`
 6. Return `201 { storyId: story.id, slug: story.slug, pollUrl: \`/api/stories/status/${story.id}\` }`
 
