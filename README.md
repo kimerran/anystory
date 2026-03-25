@@ -1,6 +1,8 @@
 # AnyStory
 
-Turn any website into a bedtime story. Paste a URL and get an illustrated, narrated children's story in seconds — powered by Claude, fal.ai, and ElevenLabs.
+Turn any website into a bedtime story. Paste a URL and get an illustrated, narrated children's story in seconds — powered by Claude, fal.ai, ElevenLabs, and **[Firecrawl](https://firecrawl.dev)**.
+
+> 🔥 **Powered by Firecrawl** — every URL is scraped and cleaned by Firecrawl before it reaches the story pipeline, handling JavaScript rendering, messy HTML, and dynamic content so Claude always gets high-quality text to work with.
 
 ## Features
 
@@ -13,6 +15,7 @@ Turn any website into a bedtime story. Paste a URL and get an illustrated, narra
 - **Next.js 16** + React 19 — web app
 - **Prisma** + PostgreSQL — database
 - **Redis** + BullMQ — background job queue
+- **[Firecrawl](https://firecrawl.dev)** — web scraping & content extraction (URL → clean markdown)
 - **Anthropic Claude** — story generation
 - **fal.ai** — image generation
 - **ElevenLabs** — audio narration
