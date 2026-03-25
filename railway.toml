@@ -2,7 +2,7 @@
 builder = "railpack"
 
 [deploy]
-startCommand = "pnpm prisma migrate deploy && pnpm start"
+startCommand = "sh start.sh"
 healthcheckPath = "/"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"
