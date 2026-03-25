@@ -20,6 +20,12 @@ Turn any website into a bedtime story. Paste a URL and get an illustrated, narra
 - Redis
 - MinIO (local) or any S3-compatible storage
   - Create two buckets before starting: `anystory-images` and `anystory-audio`
+  - You can use the MinIO client (`mc`) to create them:
+    ```bash
+    mc alias set local http://localhost:9000 minioadmin minioadmin
+    mc mb local/anystory-images local/anystory-audio
+    ```
+    (Assumes MinIO is running locally on port 9000)
 - API keys: Anthropic, fal.ai, ElevenLabs, Firecrawl, Google OAuth
 
 ## Local Setup
@@ -39,16 +45,22 @@ Turn any website into a bedtime story. Paste a URL and get an illustrated, narra
 3. Apply the database schema:
 
    ```bash
-   pnpm exec prisma migrate deploy
+   pnpm exec prisma migrate dev
    ```
 
-4. Start the web server:
+4. Generate the Prisma client:
+
+   ```bash
+   pnpm exec prisma generate
+   ```
+
+5. Start the web server:
 
    ```bash
    pnpm run dev
    ```
 
-5. In a second terminal, start the worker (required for story generation):
+6. In a second terminal, start the worker (required for story generation):
 
    ```bash
    pnpm run worker:dev
