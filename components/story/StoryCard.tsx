@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AudioPlayer } from "@/components/story/AudioPlayer";
@@ -72,6 +72,14 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
   const font = STORY_FONTS.find((f) => f.name === story.fontFamily) ?? STORY_FONTS[0]!;
   const [isPlaying, setIsPlaying] = useState(false);
   const [color, setColor] = useState<RGB | null>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Handle images already loaded from cache before onLoad fires
+  useEffect(() => {
+    if (imgRef.current?.complete) {
+      setColor(extractColor(imgRef.current));
+    }
+  }, []);
 
   const c = color;
   const cardStyle = c ? {
@@ -103,6 +111,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
             priority
             unoptimized
             crossOrigin="anonymous"
+            ref={imgRef}
             onLoad={(e) => setColor(extractColor(e.currentTarget))}
             style={isPlaying ? {
               animation: "pan-down 30s linear infinite alternate",
