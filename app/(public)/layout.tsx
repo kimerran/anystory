@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { auth } from "@/auth";
 import { UserNav } from "@/components/ui/UserNav";
 
@@ -33,9 +34,9 @@ export default async function PublicLayout({ children }: { children: React.React
 
       {/* Page nav */}
       <nav className="relative z-10 flex items-center justify-between px-8 py-5">
-        <span className="bg-gradient-to-r from-amber to-orange bg-clip-text font-fredoka text-2xl font-bold text-transparent">
+        <Link href="/" className="bg-gradient-to-r from-amber to-orange bg-clip-text font-fredoka text-2xl font-bold text-transparent">
           📖 AnyStory
-        </span>
+        </Link>
         <UserNav session={session} />
       </nav>
 

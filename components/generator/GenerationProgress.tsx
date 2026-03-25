@@ -88,7 +88,6 @@ export function GenerationProgress({ storyId, onComplete, onError }: Props) {
                   )}>
                     {step.label}
                   </p>
-                  <p className="font-fredoka text-xs text-white/30">{step.note}</p>
                 </div>
                 <span className="text-lg">
                   {isDone ? "✅" : isActive ? "⏳" : "○"}

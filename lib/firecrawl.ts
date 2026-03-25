@@ -5,6 +5,7 @@ export async function scrapeUrl(url: string): Promise<{ markdown: string }> {
     .post("https://api.firecrawl.dev/v1/scrape", {
       headers: { Authorization: `Bearer ${process.env.FIRECRAWL_API_KEY}` },
       json: { url, formats: ["markdown"], onlyMainContent: true, timeout: 30000 },
+      timeout: 60000,
     })
     .json<{ success: boolean; data?: { markdown?: string } }>();
 

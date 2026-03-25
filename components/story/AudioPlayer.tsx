@@ -7,9 +7,10 @@ interface AudioPlayerProps {
   audioUrl: string;
   title: string;
   narratorName: string;
+  onPlayingChange?: (playing: boolean) => void;
 }
 
-export function AudioPlayer({ audioUrl, title, narratorName }: AudioPlayerProps) {
+export function AudioPlayer({ audioUrl, title, narratorName, onPlayingChange }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -20,7 +21,7 @@ export function AudioPlayer({ audioUrl, title, narratorName }: AudioPlayerProps)
     if (!audio) return;
     const onTime = () => setCurrentTime(audio.currentTime);
     const onMeta = () => setDuration(audio.duration);
-    const onEnd  = () => setIsPlaying(false);
+    const onEnd  = () => { setIsPlaying(false); onPlayingChange?.(false); };
     audio.addEventListener("timeupdate", onTime);
     audio.addEventListener("loadedmetadata", onMeta);
     audio.addEventListener("ended", onEnd);
@@ -34,8 +35,8 @@ export function AudioPlayer({ audioUrl, title, narratorName }: AudioPlayerProps)
   function togglePlay() {
     const audio = audioRef.current;
     if (!audio) return;
-    if (isPlaying) { audio.pause(); setIsPlaying(false); }
-    else           { void audio.play(); setIsPlaying(true); }
+    if (isPlaying) { audio.pause(); setIsPlaying(false); onPlayingChange?.(false); }
+    else           { void audio.play(); setIsPlaying(true); onPlayingChange?.(true); }
   }
 
   function seek(e: React.MouseEvent<HTMLDivElement>) {

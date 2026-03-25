@@ -6,7 +6,7 @@ export default async function SignInPage() {
   if (session) redirect("/");
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#1e1145] via-[#3d1a6e] to-[#7c2d12] px-6">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#1e1145] via-[#3d1a6e] to-[#7c2d12] px-6 pt-20">
       {/* Stars */}
       <div
         className="pointer-events-none absolute inset-0"

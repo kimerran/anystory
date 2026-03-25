@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AudioPlayer } from "@/components/story/AudioPlayer";
@@ -24,6 +27,7 @@ interface StoryCardProps {
 
 export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
   const font = STORY_FONTS.find((f) => f.name === story.fontFamily) ?? STORY_FONTS[0]!;
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <div className="w-full max-w-[560px] overflow-hidden rounded-3xl border border-white/12 bg-white/7 shadow-[0_32px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl">
@@ -36,6 +40,13 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
             fill
             className="object-cover"
             priority
+            unoptimized
+            style={isPlaying ? {
+              animation: "pan-down 30s linear infinite alternate",
+            } : {
+              objectPosition: "center top",
+              transition: "object-position 1s ease",
+            }}
           />
         ) : (
           <div className="flex h-full items-center justify-center text-7xl" aria-label={story.title}>
@@ -68,6 +79,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
               audioUrl={story.audioUrl}
               title={story.title}
               narratorName={story.voiceName}
+              onPlayingChange={setIsPlaying}
             />
           </div>
         )}

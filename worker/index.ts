@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Worker, Job } from "bullmq";
 import { StoryStatus } from "@/app/generated/prisma/client";
 import { redis } from "@/lib/redis";

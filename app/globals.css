@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@keyframes pan-down {
+  from { object-position: center top; }
+  to   { object-position: center bottom; }
+}
+
 @theme {
   --font-fredoka:    var(--font-fredoka);
   --font-bubblegum:  var(--font-bubblegum);
