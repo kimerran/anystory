@@ -26,14 +26,70 @@ interface StoryCardProps {
   isAuthenticated: boolean;
 }
 
+interface RGB { r: number; g: number; b: number }
+
+function extractColor(img: HTMLImageElement): RGB {
+  const canvas = document.createElement("canvas");
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return { r: 255, g: 255, b: 255 };
+
+  ctx.drawImage(img, 0, 0, 64, 64);
+  const { data } = ctx.getImageData(0, 0, 64, 64);
+
+  // Weighted average — prefer saturated pixels
+  let rSum = 0, gSum = 0, bSum = 0, weight = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i]!, g = data[i + 1]!, b = data[i + 2]!, a = data[i + 3]!;
+    if (a < 128) continue;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const saturation = max === 0 ? 0 : (max - min) / max;
+    const w = 0.2 + saturation * 1.8; // saturated pixels count more
+    rSum += r * w; gSum += g * w; bSum += b * w; weight += w;
+  }
+  if (weight === 0) return { r: 255, g: 255, b: 255 };
+
+  let r = rSum / weight, g = gSum / weight, b = bSum / weight;
+
+  // Boost saturation so the tint is vivid, not muddy
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), mid = (max + min) / 2;
+  if (max !== min) {
+    const boost = 1.6;
+    r = Math.min(255, Math.max(0, mid + (r - mid) * boost));
+    g = Math.min(255, Math.max(0, mid + (g - mid) * boost));
+    b = Math.min(255, Math.max(0, mid + (b - mid) * boost));
+  }
+
+  return { r: Math.round(r), g: Math.round(g), b: Math.round(b) };
+}
+
 export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
   const font = STORY_FONTS.find((f) => f.name === story.fontFamily) ?? STORY_FONTS[0]!;
   const [isPlaying, setIsPlaying] = useState(false);
+  const [color, setColor] = useState<RGB | null>(null);
+
+  const c = color;
+  const cardStyle = c ? {
+    background: `rgba(${c.r}, ${c.g}, ${c.b}, 0.10)`,
+    borderColor: `rgba(${c.r}, ${c.g}, ${c.b}, 0.35)`,
+    boxShadow: `0 32px 80px rgba(0,0,0,0.55), 0 0 60px rgba(${c.r}, ${c.g}, ${c.b}, 0.18)`,
+  } : {};
+
+  const imageBgStyle = c ? {
+    background: `linear-gradient(135deg, rgba(${c.r}, ${c.g}, ${c.b}, 0.7) 0%, rgba(${c.r}, ${c.g}, ${c.b}, 0.25) 100%)`,
+  } : {};
 
   return (
-    <div className="w-full max-w-[560px] overflow-hidden rounded-3xl border border-white/12 bg-white/7 shadow-[0_32px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+    <div
+      className="w-full max-w-[560px] overflow-hidden rounded-3xl border border-white/12 bg-white/7 shadow-[0_32px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-[background,border-color,box-shadow] duration-700"
+      style={cardStyle}
+    >
       {/* Illustration */}
-      <div className="relative h-[220px] overflow-hidden bg-gradient-to-br from-green-900/80 via-green-700/60 to-green-950 sm:h-[340px]">
+      <div
+        className="relative h-[220px] overflow-hidden bg-gradient-to-br from-green-900/80 via-green-700/60 to-green-950 sm:h-[340px]"
+        style={imageBgStyle}
+      >
         {story.imageUrl ? (
           <Image
             src={story.imageUrl}
@@ -42,6 +98,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
             className="object-cover"
             priority
             unoptimized
+            onLoad={(e) => setColor(extractColor(e.currentTarget))}
             style={isPlaying ? {
               animation: "pan-down 30s linear infinite alternate",
             } : {
