@@ -5,7 +5,8 @@ const globalForQueue = globalThis as unknown as { storyQueue: Queue };
 
 const storyQueue =
   globalForQueue.storyQueue ??
-  new Queue("story-generation", { connection: redis });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new Queue("story-generation", { connection: redis as any });
 
 if (process.env.NODE_ENV !== "production") globalForQueue.storyQueue = storyQueue;
 
