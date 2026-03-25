@@ -28,40 +28,44 @@ interface StoryCardProps {
 
 interface RGB { r: number; g: number; b: number }
 
-function extractColor(img: HTMLImageElement): RGB {
-  const canvas = document.createElement("canvas");
-  canvas.width = 64;
-  canvas.height = 64;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return { r: 255, g: 255, b: 255 };
+function extractColor(img: HTMLImageElement): RGB | null {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
 
-  ctx.drawImage(img, 0, 0, 64, 64);
-  const { data } = ctx.getImageData(0, 0, 64, 64);
+    ctx.drawImage(img, 0, 0, 64, 64);
+    const { data } = ctx.getImageData(0, 0, 64, 64);
 
-  // Weighted average — prefer saturated pixels
-  let rSum = 0, gSum = 0, bSum = 0, weight = 0;
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i]!, g = data[i + 1]!, b = data[i + 2]!, a = data[i + 3]!;
-    if (a < 128) continue;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    const saturation = max === 0 ? 0 : (max - min) / max;
-    const w = 0.2 + saturation * 1.8; // saturated pixels count more
-    rSum += r * w; gSum += g * w; bSum += b * w; weight += w;
+    // Weighted average — prefer saturated pixels
+    let rSum = 0, gSum = 0, bSum = 0, weight = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i]!, g = data[i + 1]!, b = data[i + 2]!, a = data[i + 3]!;
+      if (a < 128) continue;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      const saturation = max === 0 ? 0 : (max - min) / max;
+      const w = 0.2 + saturation * 1.8; // saturated pixels count more
+      rSum += r * w; gSum += g * w; bSum += b * w; weight += w;
+    }
+    if (weight === 0) return null;
+
+    let r = rSum / weight, g = gSum / weight, b = bSum / weight;
+
+    // Boost saturation so the tint is vivid, not muddy
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), mid = (max + min) / 2;
+    if (max !== min) {
+      const boost = 1.6;
+      r = Math.min(255, Math.max(0, mid + (r - mid) * boost));
+      g = Math.min(255, Math.max(0, mid + (g - mid) * boost));
+      b = Math.min(255, Math.max(0, mid + (b - mid) * boost));
+    }
+
+    return { r: Math.round(r), g: Math.round(g), b: Math.round(b) };
+  } catch {
+    return null;
   }
-  if (weight === 0) return { r: 255, g: 255, b: 255 };
-
-  let r = rSum / weight, g = gSum / weight, b = bSum / weight;
-
-  // Boost saturation so the tint is vivid, not muddy
-  const max = Math.max(r, g, b), min = Math.min(r, g, b), mid = (max + min) / 2;
-  if (max !== min) {
-    const boost = 1.6;
-    r = Math.min(255, Math.max(0, mid + (r - mid) * boost));
-    g = Math.min(255, Math.max(0, mid + (g - mid) * boost));
-    b = Math.min(255, Math.max(0, mid + (b - mid) * boost));
-  }
-
-  return { r: Math.round(r), g: Math.round(g), b: Math.round(b) };
 }
 
 export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
@@ -71,9 +75,9 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
 
   const c = color;
   const cardStyle = c ? {
-    background: `rgba(${c.r}, ${c.g}, ${c.b}, 0.10)`,
-    borderColor: `rgba(${c.r}, ${c.g}, ${c.b}, 0.35)`,
-    boxShadow: `0 32px 80px rgba(0,0,0,0.55), 0 0 60px rgba(${c.r}, ${c.g}, ${c.b}, 0.18)`,
+    background: `rgba(${c.r}, ${c.g}, ${c.b}, 0.18)`,
+    borderColor: `rgba(${c.r}, ${c.g}, ${c.b}, 0.45)`,
+    boxShadow: `0 32px 80px rgba(0,0,0,0.55), 0 0 80px rgba(${c.r}, ${c.g}, ${c.b}, 0.30)`,
   } : {};
 
   const imageBgStyle = c ? {
@@ -98,6 +102,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
             className="object-cover"
             priority
             unoptimized
+            crossOrigin="anonymous"
             onLoad={(e) => setColor(extractColor(e.currentTarget))}
             style={isPlaying ? {
               animation: "pan-down 30s linear infinite alternate",

@@ -35,6 +35,7 @@ export async function GET(
     if (upstream.ContentRange) headers.set("Content-Range", upstream.ContentRange);
     if (upstream.AcceptRanges) headers.set("Accept-Ranges", upstream.AcceptRanges);
     headers.set("Cache-Control", "public, max-age=31536000, immutable");
+    headers.set("Access-Control-Allow-Origin", "*");
 
     const stream = upstream.Body?.transformToWebStream() ?? null;
     return new NextResponse(stream, { status: range ? 206 : 200, headers });
