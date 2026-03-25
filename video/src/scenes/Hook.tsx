@@ -5,7 +5,8 @@ export function Hook() {
   const { fps } = useVideoConfig();
 
   const wordGroups = ["What if", "any website", "could become", "a bedtime story?"];
-  const wordDuration = fps * 1.3;
+  // Scene is ~2.8s = 84 frames — stagger words every 18 frames so all 4 land by frame 75
+  const wordDuration = 18;
 
   return (
     <div style={{
@@ -28,7 +29,7 @@ export function Hook() {
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, zIndex: 1 }}>
         {wordGroups.map((group, i) => {
-          const startFrame = i * wordDuration * 0.7;
+          const startFrame = i * wordDuration;
           const opacity = interpolate(frame, [startFrame, startFrame + 12], [0, 1], {
             extrapolateLeft: "clamp", extrapolateRight: "clamp",
             easing: Easing.out(Easing.cubic),
@@ -57,7 +58,7 @@ export function Hook() {
 
       {/* Book emoji */}
       {(() => {
-        const emojiStart = wordDuration * 2.5;
+        const emojiStart = wordDuration * 3;
         const opacity = interpolate(frame, [emojiStart, emojiStart + 10], [0, 1], {
           extrapolateLeft: "clamp", extrapolateRight: "clamp",
         });

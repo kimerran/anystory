@@ -1,9 +1,11 @@
 import { useCurrentFrame, useVideoConfig, interpolate, Easing, staticFile } from "remotion";
 
+// Timed to match Domi's delivery of "Paste a URL, pick a voice, hit generate"
+// across the ~3.9s scene window
 const beats = [
   { text: "Paste a URL.", start: 0 },
-  { text: "Pick a voice.", start: 2.2 },
-  { text: "Hit generate.", start: 4.4 },
+  { text: "Pick a voice.", start: 1.4 },
+  { text: "Hit generate.", start: 2.7 },
 ];
 
 export function Demo() {

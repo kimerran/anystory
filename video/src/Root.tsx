@@ -6,7 +6,7 @@ export function Root() {
     <Composition
       id="PitchVideo"
       component={PitchVideo}
-      durationInFrames={1050}
+      durationInFrames={585}
       fps={30}
       width={1920}
       height={1080}
