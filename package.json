@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "pnpm": {
-    "ignoredBuiltDependencies": ["sharp", "unrs-resolver"]
+    "ignoredBuiltDependencies": ["sharp", "unrs-resolver", "prisma", "@prisma/client", "@prisma/engines"]
   },
   "scripts": {
     "dev": "next dev --webpack",
