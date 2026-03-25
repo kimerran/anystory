@@ -2,6 +2,12 @@
 
 Turn any website into a bedtime story. Paste a URL and get an illustrated, narrated children's story in seconds — powered by Claude, fal.ai, and ElevenLabs.
 
+## Features
+
+- **URL pre-check** — as soon as you leave the URL field, the app does a quick reachability check and blocks submission if the page can't be reached, preventing wasted pipeline runs
+- **Surprise Me** — click "Surprise me" in the URL field to get a randomly selected children-friendly URL (powered by Firecrawl search), filled in and checked automatically
+- **Story source link** — each story page links back to its source article with "Story inspired from …" so readers can explore the original
+
 ## Tech Stack
 
 - **Next.js 16** + React 19 — web app

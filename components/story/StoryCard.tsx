@@ -17,6 +17,7 @@ interface Story {
   fontFamily: string;
   voiceName: string;
   sourceDomain: string;
+  sourceUrl: string;
   slug: string;
 }
 
@@ -60,9 +61,14 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
 
       {/* Body */}
       <div className="px-8 py-7">
-        <p className="mb-2.5 font-fredoka text-xs uppercase tracking-wider text-white/33">
-          📎 {story.sourceDomain}
-        </p>
+        <a
+          href={story.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-2.5 font-fredoka text-xs text-white/33 transition hover:text-amber/60"
+        >
+          📎 Story inspired from <span className="underline">{story.sourceDomain}</span>
+        </a>
 
         <h1 className="mb-4 bg-gradient-to-br from-[#fbbf24] to-[#f97316] bg-clip-text text-[32px] font-bubblegum leading-tight text-transparent">
           {story.title}

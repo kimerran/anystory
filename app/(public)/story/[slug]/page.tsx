@@ -36,7 +36,7 @@ export default async function StoryPage({ params }: Props) {
       select: {
         id: true, slug: true, title: true, content: true,
         imageUrl: true, audioUrl: true, fontFamily: true,
-        voiceName: true, sourceDomain: true, userId: true,
+        voiceName: true, sourceDomain: true, sourceUrl: true, userId: true,
       },
     }),
   ]);
