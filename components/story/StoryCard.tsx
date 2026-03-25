@@ -33,7 +33,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
   return (
     <div className="w-full max-w-[560px] overflow-hidden rounded-3xl border border-white/12 bg-white/7 shadow-[0_32px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl">
       {/* Illustration */}
-      <div className="relative h-[340px] overflow-hidden bg-gradient-to-br from-green-900/80 via-green-700/60 to-green-950">
+      <div className="relative h-[220px] overflow-hidden bg-gradient-to-br from-green-900/80 via-green-700/60 to-green-950 sm:h-[340px]">
         {story.imageUrl ? (
           <Image
             src={story.imageUrl}
@@ -60,7 +60,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
       </div>
 
       {/* Body */}
-      <div className="px-8 py-7">
+      <div className="px-5 py-6 sm:px-8 sm:py-7">
         <a
           href={story.sourceUrl}
           target="_blank"
@@ -70,7 +70,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
           📎 Story inspired from <span className="underline">{story.sourceDomain}</span>
         </a>
 
-        <h1 className="mb-4 bg-gradient-to-br from-[#fbbf24] to-[#f97316] bg-clip-text text-[32px] font-bubblegum leading-tight text-transparent">
+        <h1 className="mb-4 bg-gradient-to-br from-[#fbbf24] to-[#f97316] bg-clip-text text-[26px] font-bubblegum leading-tight text-transparent sm:text-[32px]">
           {story.title}
         </h1>
 
@@ -91,7 +91,7 @@ export function StoryCard({ story, isAuthenticated }: StoryCardProps) {
         )}
 
         {/* Actions */}
-        <div className="flex gap-2.5">
+        <div className="flex flex-wrap gap-2.5">
           <CopyLinkButton />
           {story.audioUrl && (
             <a

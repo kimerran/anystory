@@ -3,6 +3,4 @@ builder = "railpack"
 
 [deploy]
 startCommand = "sh start.sh"
-healthcheckPath = "/"
-healthcheckTimeout = 30
 restartPolicyType = "on_failure"

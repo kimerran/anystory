@@ -36,7 +36,7 @@ export function UserNav({ session, className }: UserNavProps) {
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <span className="font-fredoka text-sm text-white/70">{session.user.name}</span>
+      <span className="hidden font-fredoka text-sm text-white/70 sm:inline">{session.user.name}</span>
       <div
         className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber to-orange text-sm font-bold text-black shadow-[0_0_0_2px_rgba(251,191,36,0.3)]"
         aria-label={`Signed in as ${session.user.name}`}

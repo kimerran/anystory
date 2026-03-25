@@ -74,11 +74,13 @@ export function HomeClient({ session, recentStories, storyCount, isAuthenticated
         Turn any website into a bedtime story — in seconds
       </p>
 
-      <UrlForm
-        onSubmit={handleGenerate}
-        isLoading={isLoading}
-        isAuthenticated={isAuthenticated}
-      />
+      <div className="w-full max-w-[520px]">
+        <UrlForm
+          onSubmit={handleGenerate}
+          isLoading={isLoading}
+          isAuthenticated={isAuthenticated}
+        />
+      </div>
 
       {/* Recent stories */}
       <div className="mt-12 w-full max-w-[520px]">
@@ -103,7 +105,7 @@ export function HomeClient({ session, recentStories, storyCount, isAuthenticated
         {recentStories.length === 0 ? (
           <p className="text-center font-fredoka text-sm text-white/30">No stories yet — be the first!</p>
         ) : (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {recentStories.map((story) => (
               <Link
                 key={story.id}

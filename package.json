@@ -6,7 +6,10 @@
     "node": ">=20.19"
   },
   "pnpm": {
-    "ignoredBuiltDependencies": ["sharp", "unrs-resolver", "prisma", "@prisma/client", "@prisma/engines"]
+    "ignoredBuiltDependencies": ["sharp", "unrs-resolver", "prisma", "@prisma/client", "@prisma/engines"],
+    "overrides": {
+      "ioredis": "^5.10.1"
+    }
   },
   "scripts": {
     "dev": "next dev --webpack",

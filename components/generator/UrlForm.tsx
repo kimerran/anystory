@@ -95,7 +95,7 @@ export function UrlForm({ onSubmit, isLoading, isAuthenticated = false }: UrlFor
   return (
     <form
       onSubmit={handleSubmit((values) => onSubmit(values))}
-      className="flex flex-col gap-4 rounded-3xl border border-white/12 bg-white/7 p-6 shadow-2xl backdrop-blur-xl"
+      className="w-full flex flex-col gap-4 rounded-3xl border border-white/12 bg-white/7 p-6 shadow-2xl backdrop-blur-xl"
     >
       {/* URL input */}
       <div className="flex flex-col gap-1">
@@ -134,7 +134,7 @@ export function UrlForm({ onSubmit, isLoading, isAuthenticated = false }: UrlFor
             disabled={isLoading || isSurprising}
             className="ml-1 shrink-0 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 font-fredoka text-xs text-white/55 transition hover:border-amber/40 hover:text-amber disabled:opacity-40"
           >
-            {isSurprising ? "finding…" : "🎲 Surprise me"}
+            {isSurprising ? "…" : "🎲"}<span className="hidden sm:inline">{isSurprising ? "" : " Surprise me"}</span>
           </button>
         </div>
         {errors.url && (

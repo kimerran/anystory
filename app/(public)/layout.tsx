@@ -24,7 +24,7 @@ export default async function PublicLayout({ children }: { children: React.React
 
       {/* Moon */}
       <div
-        className="pointer-events-none absolute right-12 top-7 h-16 w-16 rounded-full"
+        className="pointer-events-none absolute right-4 top-7 h-16 w-16 rounded-full sm:right-12"
         style={{
           background: "radial-gradient(circle at 38% 40%, #fef9e7, #fbbf24)",
           boxShadow: "0 0 28px rgba(251,191,36,0.65), 0 0 72px rgba(251,191,36,0.22)",
@@ -33,7 +33,7 @@ export default async function PublicLayout({ children }: { children: React.React
       />
 
       {/* Page nav */}
-      <nav className="relative z-10 flex items-center justify-between px-8 py-5">
+      <nav className="relative z-10 flex items-center justify-between px-4 py-5 sm:px-8">
         <Link href="/" className="bg-gradient-to-r from-amber to-orange bg-clip-text font-fredoka text-2xl font-bold text-transparent">
           📖 AnyStory
         </Link>
